@@ -4,6 +4,9 @@
 #
 
 
+use Cwd qw(abs_path);
+use FindBin;
+use lib abs_path("$FindBin::Bin/../lib");
 use Encode::Guess qw/ascii latin9 utf-8 cp-1252/;
 use Encode::Encoding;
 use Encode;
