@@ -55,36 +55,13 @@ sub f {
 */
 /**
  * Clean an HTML text by removing/replacing special characters
- * and by checking that the expected encoding (latin1)
+ * and by checking that the expected encoding (utf8)
  * @param $text un texte.
  */
 /*
 =cut
 sub clean_text {
   my $p_text = shift;
-  my $EXPECTED_ENCODING = 'utf8';
-
-  my $decodage = 0;
-  
-
-#   	$$p_text = encode("utf8", $$p_text);
-  
-#  my $encoding = guess_encoding($$p_text);  
-#  if (ref($encoding)) {
-#    eval {
-#      $$p_text = $encoding->decode($$p_text);
-#      $$p_text = encode($EXPECTED_ENCODING,$$p_text);
-#            $$p_text =~ s/[^!"#\$%&'\(\)\*\+,\-\.\/0123456789:;<=>\?\@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\\\]\^_`abcdefghijklmnopqrstuvwxyz{|}~¡¢£¥§©ª« ¬\­®¯°±²³µ¶¹º »¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ?\n ]/ /g;
-#    }
-#  }
-  
-  
-#   $$p_text =~ /(cleverly concealed.*unexplored aban)/;
-#   foreach my $w (split(/ /,$1)) {
-#   	foreach my $l (split(//, $w)) {
-#   		print STDERR "$w\t$l\t".ord($l)."\n";
-#   	}
-#   }
 
     $$p_text =~ s/\x{2019}/'/g;
     $$p_text =~ s/\x{156}/'/g;
@@ -123,8 +100,6 @@ sub clean_text {
     $$p_text =~ s/&#8218;?/'/g;
     $$p_text =~ s/&rsquo;?/'/g;
 
-    $$p_text =~ s/\x{00AB} ?/"/g;
-    $$p_text =~ s/ ?\x{00BB}/"/g;
     $$p_text =~ s/\x{201C}/"/g;
     $$p_text =~ s/\x{201D}/"/g;
     $$p_text =~ s//"/g;
@@ -193,7 +168,6 @@ sub clean_text {
   $$p_text =~ s/ +/ /g;
   $$p_text =~ s/^ //gm;
   $$p_text =~ s/ $//gm;
-#  $$p_text = encode("utf8", $$p_text);
 
 }
 

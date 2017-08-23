@@ -51,6 +51,7 @@ sub try_decode {
 	if ($encoding ne "") {
 # 		print STDERR "$f\t$encoding\n";
 		$out_txt = decode($encoding, $in_txt);
+# 		$out_txt = encode("utf-8", $out_txt);
 	}
 	else {
 # 		print STDERR "$f\tNOTHING\n";
@@ -69,6 +70,7 @@ while (my $in = shift(@ARGV)) {
 	#extract main content
 	my $p_txt = extract_content(\$txt);
 	$$p_txt =~ s/ ?\[\d+\] ?/ /g;
+	$$p_txt = encode("utf-8", $$p_txt);
 	print $$p_txt;
 }
 
