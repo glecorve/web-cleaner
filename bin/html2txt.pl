@@ -16,7 +16,7 @@ use Encode;
 use WebPageCleaner;
 use WebPagePruner;
 $|++;
-if (@ARGV < 1) {
+if (scalar(@ARGV) < 1) {
 	usage();
 }
 
@@ -26,15 +26,15 @@ sub try_decode {
 	my $in_txt = `cat $f`;
 
 	my @candidates = ("utf-8", "latin9", "latin1", "cp-1252", "ascii");
-	
+
 	my $encoding = "";
-	
+
 	#try to find
 	if ($in_txt =~ /<meta[^>]*charset=["']?([a-z0-9-]+)["']?[^>]*>/i) {
 		$encoding = $1;
 #			print STDERR "$f\t$encoding\n";
 	}
-	
+
 	#try to guess otherwise
 	else {
 		foreach my $e (@candidates) {
@@ -48,17 +48,19 @@ sub try_decode {
 		   	}
 		}
 	}
-	if ($encoding ne "") {
-# 		print STDERR "$f\t$encoding\n";
+	if ($encoding ne "" && $encoding ne "utf-8" && $encoding ne "ascii") {
+		print STDERR "$f\t$encoding\n";
+		# $out_txt = $in_txt;
 		$out_txt = decode($encoding, $in_txt);
-# 		$out_txt = encode("utf-8", $out_txt);
+		$out_txt = encode("utf-8", $out_txt);
+		# print $out_txt;
 	}
 	else {
 # 		print STDERR "$f\tNOTHING\n";
 		$out_txt = $in_txt;
 	}
 # 	$out_txt = decode("utf-8", $out_txt);
-	return $out_txt;		
+	return $out_txt;
 }
 
 while (my $in = shift(@ARGV)) {
@@ -66,8 +68,9 @@ while (my $in = shift(@ARGV)) {
 	my $txt = try_decode($in);
 	#simplify special characters
 	clean_text(\$txt);
-
+	# print $txt;
 	#extract main content
+	$txt = decode("utf-8", $txt);
 	my $p_txt = extract_content(\$txt);
 	$$p_txt =~ s/ ?\[\d+\] ?/ /g;
 	$$p_txt = encode("utf-8", $$p_txt);
@@ -86,4 +89,3 @@ Synopsis:
 EOF
 	exit 0;
 }
-

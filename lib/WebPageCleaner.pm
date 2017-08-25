@@ -85,13 +85,13 @@ sub clean_text {
     $$p_text =~ s/\234/oe/g;
     $$p_text =~ s/&#339;?/oe/g;
     $$p_text =~ s/&oelig;?/oe/g;
-    
+
     $$p_text =~ s/&#8226;?/&#149;/g;
     $$p_text =~ s/&#8230;?/... /g;
     $$p_text =~ s/&hellip;?/... /g;
     $$p_text =~ s/\x{2026}/... /g;
     $$p_text =~ s//... /g;
-    
+
     $$p_text =~ s//'/g;
     $$p_text =~ s/&#39;?/'/g;
     $$p_text =~ s/&#039;?/'/g;
@@ -100,6 +100,8 @@ sub clean_text {
     $$p_text =~ s/&#8218;?/'/g;
     $$p_text =~ s/&rsquo;?/'/g;
 
+    $$p_text =~ s/\xC2\xAB/"/g;
+    $$p_text =~ s/\xC2\xBB/"/g;
     $$p_text =~ s/\x{201C}/"/g;
     $$p_text =~ s/\x{201D}/"/g;
     $$p_text =~ s//"/g;
@@ -117,7 +119,7 @@ sub clean_text {
     $$p_text =~ s/&laquo;?/"/g;
     $$p_text =~ s/&raquo;?/"/g;
     $$p_text =~ s/&nbsp;?/ /g;
-    
+
     $$p_text =~ s/\x{2010}/ - /g;
     $$p_text =~ s/\x{2011}/ - /g;
     $$p_text =~ s/\x{2012}/ - /g;
@@ -125,11 +127,11 @@ sub clean_text {
     $$p_text =~ s/\x{2053}/ - /g;
     $$p_text =~ s/&.?dash;?/-/g;
     $$p_text =~ s/—/ - /g;
-    
+
     $$p_text =~ s/&bull;?/ • /g;
     $$p_text =~ s// ■ /g;
     $$p_text =~ s/&#(\d+)(;?)/($1<255?"&#$1$2":" ")/eg;
-    
+
     #umlauts
     $$p_text =~ s/\x{00E4}/ä/g;
     $$p_text =~ s/\x{00C4}/Ä/g;
@@ -152,13 +154,13 @@ sub clean_text {
     $$p_text =~ s/\x{FB06}/st/g;
     $$p_text =~ s/\x{0132}/IJ/g;
     $$p_text =~ s/\x{0133}/ij/g;
-    
-    
+
+
     $$p_text =~ s/\x{FFFD}s/'s/g;
     $$p_text =~ s/\x{FFFD}{2}oe/ "/g;
     $$p_text =~ s/â€\x{FFFD}{2}oe/ - /g;
     $$p_text =~ s/\x{FFFD} / - /g;
-    
+
     $$p_text =~ s/\x//g;
 
     $$p_text =~ s/(\w)\?(\w)/$1'$2/g;
@@ -187,7 +189,7 @@ sub html2text{
 
 
   # Remove the HTML comments first (stolen from perldoc HTML::Parser)
-  my $parser = HTML::Parser->new(default_h => 
+  my $parser = HTML::Parser->new(default_h =>
                                    [sub { my $element = shift; $new_html = $new_html.$element }, 'text'],
                                  comment_h => [""],
                                  );
@@ -204,14 +206,14 @@ sub html2text{
   $html =~ s/\<(\/)?(BR|P).*?(\s*\/)?\>/ /mgi;
   # delete other HTML tags
   $html =~ s/\<[^>]+\>//mg;
-  
+
   clean_text(\$html);
 
   # Replace HTML entities with normal text
-  $html = decode_entities($html);  
-  
+  $html = decode_entities($html);
+
   $html =~ s/\S\?\S/ /g;
-  
+
   return $html;
 
 }
@@ -225,4 +227,3 @@ sub html2text{
 */
 }
 =cut
-
